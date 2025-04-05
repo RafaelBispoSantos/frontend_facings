@@ -7,7 +7,7 @@ import { useStoreTypes } from '../../components/hooks/useStoreTypes';
 import { formatCategoryName, formatStoreType, formatPercentage } from '../utils/formatters';
 import { Button } from '../../components/ui';
 import { Link } from 'react-router-dom';
-import api from '@/services/api';
+import api from '../../services/api';
 
 const Dashboard = () => {
   const { spaces, isLoading } = useFacings();
