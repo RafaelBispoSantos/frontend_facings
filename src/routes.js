@@ -4,7 +4,7 @@ import { Login, Register, ForgotPassword } from './pages/auth';
 import { FacingsList, FacingDetail, AddSpace, AddMeasurement } from './pages/facings';
 import { Dashboard, Reports } from './pages/dashboard';
 import { Profile, AppSettings } from './pages/settings';
-import Home from './pages/Home';
+
 import NotFound from './pages/NotFound';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 
