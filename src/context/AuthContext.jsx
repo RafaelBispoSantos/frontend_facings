@@ -17,6 +17,7 @@ const AUTH_LOADING = 'AUTH_LOADING';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
 const AUTH_ERROR = 'AUTH_ERROR';
 const AUTH_LOGOUT = 'AUTH_LOGOUT';
+const REGISTER_SUCCESS = 'REGISTER_SUCCESS'; // Nova ação para registro bem-sucedido
 
 // Reducer
 const authReducer = (state, action) => {
@@ -51,6 +52,12 @@ const authReducer = (state, action) => {
         isLoading: false,
         error: null
       };
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        error: null
+      };
     default:
       return state;
   }
@@ -71,22 +78,22 @@ export const AuthProvider = ({ children }) => {
           // Opcional: verificar validade do token com o servidor
           // await authService.verifyToken();
           
-          dispatch({ 
-            type: AUTH_SUCCESS, 
-            payload: JSON.parse(userData) 
+          dispatch({
+            type: AUTH_SUCCESS,
+            payload: JSON.parse(userData)
           });
         } catch (error) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          dispatch({ 
-            type: AUTH_ERROR, 
-            payload: 'Sessão expirada. Faça login novamente.' 
+          dispatch({
+            type: AUTH_ERROR,
+            payload: 'Sessão expirada. Faça login novamente.'
           });
         }
       } else {
-        dispatch({ 
-          type: AUTH_ERROR, 
-          payload: null 
+        dispatch({
+          type: AUTH_ERROR,
+          payload: null
         });
       }
     };
@@ -122,6 +129,10 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_LOADING });
     try {
       const response = await authService.register(userData);
+      
+      // Importante: despachar ação para indicar que o registro foi bem-sucedido
+      dispatch({ type: REGISTER_SUCCESS });
+      
       return response.data;
     } catch (error) {
       dispatch({
