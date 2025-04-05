@@ -72,27 +72,30 @@ const Register = () => {
     setServerError('');
     
     try {
-      await register({
+      const response = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
-      
-      // Reseta o estado do formulário
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
-      
-      // Reseta o estado de submissão antes de navegar
-      setIsSubmitting(false);
-      
-      // Navega para a página de login
+
+      // Primeiro, garantimos que todas as atualizações de estado sejam concluídas
+      await Promise.all([
+        setIsSubmitting(false),
+        setFormData({
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        })
+      ]);
+
+      // Só então navegamos para o login
       navigate('/login', { 
-        state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' },
-        replace: true // Isso previne voltar para a página de registro
+        replace: true,
+        state: { 
+          message: 'Cadastro realizado com sucesso! Faça login para continuar.',
+          type: 'success'
+        }
       });
       
     } catch (err) {
@@ -109,7 +112,6 @@ const Register = () => {
       }
       
       setServerError(errorMessage);
-      // Certifique-se de resetar o estado de submissão em caso de erro
       setIsSubmitting(false);
     }
 };
