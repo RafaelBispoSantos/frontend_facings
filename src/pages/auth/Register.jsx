@@ -72,49 +72,38 @@ const Register = () => {
     setServerError('');
     
     try {
-      const response = await register({
+      const result = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
-
-      // Primeiro, garantimos que todas as atualizações de estado sejam concluídas
-      await Promise.all([
-        setIsSubmitting(false),
-        setFormData({
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
-        })
-      ]);
-
-      // Só então navegamos para o login
-      navigate('/login', { 
-        replace: true,
-        state: { 
-          message: 'Cadastro realizado com sucesso! Faça login para continuar.',
-          type: 'success'
-        }
-      });
       
+      console.log('Registro concluído:', result);
+      
+      // Redirecionar para login após registro bem-sucedido
+      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
     } catch (err) {
-      console.error('Errooo no registro:', err);
+      console.error('Erro no registro:', err);
       
+      // Tratamento de erro mais robusto
       let errorMessage = 'Erro ao registrar. Tente novamente.';
       
       if (err.response) {
+        // Resposta do servidor com código de erro
         errorMessage = err.response.data?.message || `Erro ${err.response.status}: ${err.response.statusText}`;
       } else if (err.request) {
+        // Requisição feita mas sem resposta
         errorMessage = 'Servidor não respondeu. Verifique sua conexão.';
       } else if (err.message) {
+        // Erro específico
         errorMessage = err.message;
       }
       
       setServerError(errorMessage);
+    } finally {
       setIsSubmitting(false);
     }
-};
+  };
   
   return (
     <div className="flex min-h-screen flex-col justify-center bg-gradient-to-b from-blue-50 to-gray-100 px-4 py-8">
