@@ -72,16 +72,34 @@ const Register = () => {
     setServerError('');
     
     try {
-      await register({
+      const result = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
       
+      console.log('Registro concluído:', result);
+      
       // Redirecionar para login após registro bem-sucedido
       navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
     } catch (err) {
-      setServerError(err.response?.data?.message || 'Erro ao registrar. Tente novamente.');
+      console.error('Erro no registro:', err);
+      
+      // Tratamento de erro mais robusto
+      let errorMessage = 'Erro ao registrar. Tente novamente.';
+      
+      if (err.response) {
+        // Resposta do servidor com código de erro
+        errorMessage = err.response.data?.message || `Erro ${err.response.status}: ${err.response.statusText}`;
+      } else if (err.request) {
+        // Requisição feita mas sem resposta
+        errorMessage = 'Servidor não respondeu. Verifique sua conexão.';
+      } else if (err.message) {
+        // Erro específico
+        errorMessage = err.message;
+      }
+      
+      setServerError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -96,6 +114,11 @@ const Register = () => {
             src="/icon.png" 
             alt="Logo" 
             className="h-40 w-auto" 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/favicon.ico';
+              console.log('Imagem principal não encontrada, usando fallback.');
+            }}
           />
         </div>
         
