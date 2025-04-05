@@ -93,7 +93,7 @@ const Register = () => {
       // Aguardar alguns segundos para o usuário ver o alerta antes de redirecionar
       setTimeout(() => {
         // Redirecionar para login após registro bem-sucedido
-        navigate('/', { 
+        navigate('/login', { 
           state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } 
         });
       }, 2000);
