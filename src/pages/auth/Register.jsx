@@ -83,7 +83,7 @@ const Register = () => {
       // Redirecionar para login após registro bem-sucedido
       navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
     } catch (err) {
-      console.error('Erro no registro:', err);
+      console.error('Errooo no registro:', err);
       
       // Tratamento de erro mais robusto
       let errorMessage = 'Erro ao registrar. Tente novamente.';
