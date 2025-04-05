@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Input, Alert } from '../../components/ui';
 import { useAuth } from '../../components/hooks/useAuth';
 import { isValidEmail, isValidPassword } from '../utils/validators';
@@ -18,7 +18,7 @@ const Register = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   
   const { register } = useAuth();
-  const navigate = useNavigate();
+
   
   const handleChange = (e) => {
     const { name, value } = e.target;
