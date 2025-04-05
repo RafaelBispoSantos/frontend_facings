@@ -52,7 +52,7 @@ function App() {
           element={
             isAuthenticated ? 
               <Navigate to="/facings" replace /> : 
-              <Home />
+              <Login />
           } 
         />
         <Route path="/login" element={<Login />} />
