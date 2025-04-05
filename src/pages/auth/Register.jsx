@@ -87,15 +87,16 @@ const Register = () => {
       
       console.log('Registro concluído:', result);
       
+      // Armazenar a mensagem no sessionStorage para recuperar após o redirecionamento
+      sessionStorage.setItem('registerSuccessMessage', 'Cadastro realizado com sucesso! Faça login para continuar.');
+      
       // Mostrar alerta de sucesso
       setShowSuccessAlert(true);
       
       // Aguardar alguns segundos para o usuário ver o alerta antes de redirecionar
       setTimeout(() => {
-        // Redirecionar para login após registro bem-sucedido
-        navigate('/login', { 
-          state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } 
-        });
+        // Usar window.location.href para forçar uma atualização completa da página
+        window.location.href = '/login';
       }, 2000);
       
     } catch (err) {
@@ -220,6 +221,7 @@ const Register = () => {
                 autoComplete="new-password"
                 className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 required
+                
               />
               {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
             </div>
