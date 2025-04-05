@@ -15,8 +15,11 @@
       "dest": "/static/$1"
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/(.*\\.(png|jpg|jpeg|gif|ico|svg))$",
+      "dest": "/$1"
     },
     {
       "src": "/manifest.json",

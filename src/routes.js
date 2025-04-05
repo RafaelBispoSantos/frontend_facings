@@ -26,7 +26,7 @@ const routes = [
   // Rotas públicas
   {
     path: '/',
-    element: <Home />,
+    element:<Login/>,
   },
   {
     path: '/login',
