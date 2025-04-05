@@ -16,7 +16,7 @@ const AddSpace = () => {
     setError(null);
     
     try {
-      const newSpace = await createSpace(formData);
+      await createSpace(formData);
       // Redirecionar para a lista de espaços após sucesso
       navigate('/facings');
     } catch (err) {
@@ -24,8 +24,7 @@ const AddSpace = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-  
+  };  
   return (
     <PageContainer>
       <Header title="Adicionar Novo Espaço" />

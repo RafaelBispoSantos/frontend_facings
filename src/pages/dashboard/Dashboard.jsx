@@ -3,7 +3,7 @@ import { Header, PageContainer } from '../../components/layout';
 import { useFacings } from '../../components/hooks/useFacings';
 import { useCategories } from '../../components/hooks/useCategories';
 import { useStoreTypes } from '../../components/hooks/useStoreTypes';
-import { calculateUsedPercentage, checkGoalAchieved } from '../utils/calculations';
+
 import { formatCategoryName, formatStoreType, formatPercentage } from '../utils/formatters';
 import { Button } from '../../components/ui';
 import { Link } from 'react-router-dom';

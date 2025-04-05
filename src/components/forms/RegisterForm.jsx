@@ -179,13 +179,13 @@ const RegisterForm = ({ onSubmit, isLoading, error }) => {
       <div className="mt-2">
         <p className="text-xs text-gray-500">
           Ao se registrar, você concorda com os nossos{' '}
-          <a href="#" className="text-blue-600 hover:text-blue-500">
+          <button type="button" className="text-blue-600 hover:text-blue-500">
             Termos de Serviço
-          </a>{' '}
+          </button>{' '}
           e{' '}
-          <a href="#" className="text-blue-600 hover:text-blue-500">
+          <button type="button" className="text-blue-600 hover:text-blue-500">
             Política de Privacidade
-          </a>
+          </button>
           .
         </p>
       </div>
@@ -221,7 +221,6 @@ const RegisterForm = ({ onSubmit, isLoading, error }) => {
     </form>
   );
 };
-
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
