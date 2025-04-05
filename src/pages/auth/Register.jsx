@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Input } from '../../components/ui';
+import { Button, Input, Alert } from '../../components/ui';
 import { useAuth } from '../../components/hooks/useAuth';
 import { isValidEmail, isValidPassword } from '../utils/validators';
 
@@ -15,6 +15,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -65,13 +66,19 @@ const Register = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Formulário submetido');
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      console.log('Validação falhou');
+      return;
+    }
     
     setIsSubmitting(true);
     setServerError('');
+    console.log('IsSubmitting definido como true');
     
     try {
+      console.log('Tentando registrar usuário...');
       const result = await register({
         name: formData.name,
         email: formData.email,
@@ -80,8 +87,17 @@ const Register = () => {
       
       console.log('Registro concluído:', result);
       
-      // Redirecionar para login após registro bem-sucedido
-      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
+      // Mostrar alerta de sucesso
+      setShowSuccessAlert(true);
+      
+      // Aguardar alguns segundos para o usuário ver o alerta antes de redirecionar
+      setTimeout(() => {
+        // Redirecionar para login após registro bem-sucedido
+        navigate('/login', { 
+          state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } 
+        });
+      }, 2000);
+      
     } catch (err) {
       console.error('Erro no registro:', err);
       
@@ -101,7 +117,9 @@ const Register = () => {
       
       setServerError(errorMessage);
     } finally {
+      console.log('Finally executado');
       setIsSubmitting(false);
+      console.log('IsSubmitting definido como false');
     }
   };
   
@@ -132,10 +150,24 @@ const Register = () => {
 
       <div className="mt-6 mx-auto w-full max-w-md">
         <div className="bg-white px-6 py-8 shadow-xl rounded-xl">
+          {/* Alerta de sucesso */}
+          {showSuccessAlert && (
+            <Alert
+              type="success"
+              title="Cadastro Realizado!"
+              message="Seu cadastro foi realizado com sucesso. Você será redirecionado para a página de login."
+              className="mb-6"
+            />
+          )}
+          
+          {/* Alerta de erro */}
           {serverError && (
-            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
-              <p className="text-sm font-medium">{serverError}</p>
-            </div>
+            <Alert
+              type="error"
+              title="Erro no cadastro"
+              message={serverError}
+              className="mb-6"
+            />
           )}
           
           <form className="space-y-5" onSubmit={handleSubmit}>
