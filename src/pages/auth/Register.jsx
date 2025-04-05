@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input, Alert } from '../../components/ui';
 import { useAuth } from '../../components/hooks/useAuth';
 import { isValidEmail, isValidPassword } from '../utils/validators';
@@ -18,7 +18,7 @@ const Register = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   
   const { register } = useAuth();
-
+  const navigate = useNavigate();
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,16 +87,15 @@ const Register = () => {
       
       console.log('Registro concluído:', result);
       
-      // Armazenar a mensagem no sessionStorage para recuperar após o redirecionamento
-      sessionStorage.setItem('registerSuccessMessage', 'Cadastro realizado com sucesso! Faça login para continuar.');
-      
       // Mostrar alerta de sucesso
       setShowSuccessAlert(true);
       
       // Aguardar alguns segundos para o usuário ver o alerta antes de redirecionar
       setTimeout(() => {
-        // Usar window.location.href para forçar uma atualização completa da página
-        window.location.href = '/login';
+        // Redirecionar para login após registro bem-sucedido
+        navigate('/login', { 
+          state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } 
+        });
       }, 2000);
       
     } catch (err) {
