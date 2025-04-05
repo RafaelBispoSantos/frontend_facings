@@ -97,7 +97,7 @@ const Register = () => {
         
         // Redirecionar para login usando window.location para recarregar a página completamente
         window.location.href = '/login';
-      }, 2000);
+      }, 1000);
       
     } catch (err) {
       console.error('Erro no registro:', err);
