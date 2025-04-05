@@ -15,7 +15,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
   
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -77,6 +77,12 @@ const Register = () => {
     setServerError('');
     console.log('IsSubmitting definido como true');
     
+    // Timeout de segurança para garantir que isSubmitting não fique preso
+    const safetyTimeout = setTimeout(() => {
+      console.log('Safety timeout acionado');
+      setIsSubmitting(false);
+    }, 10000);
+    
     try {
       console.log('Tentando registrar usuário...');
       const result = await register({
@@ -87,19 +93,21 @@ const Register = () => {
       
       console.log('Registro concluído:', result);
       
-      // Mostrar alerta de sucesso
-      setShowSuccessAlert(true);
+      // Limpar o timeout de segurança
+      clearTimeout(safetyTimeout);
       
-      // Aguardar alguns segundos para o usuário ver o alerta antes de redirecionar
-      setTimeout(() => {
-        // Redirecionar para login após registro bem-sucedido
-        navigate('/login', { 
-          state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } 
-        });
-      }, 2000);
+      // Desativar o estado de submissão
+      setIsSubmitting(false);
+      
+      // Ativar o estado de registro completo
+      setRegistrationComplete(true);
+      
+      // Não redirecionamos automaticamente mais
+      // O usuário vai clicar no botão para ir para o login
       
     } catch (err) {
       console.error('Erro no registro:', err);
+      clearTimeout(safetyTimeout);
       
       // Tratamento de erro mais robusto
       let errorMessage = 'Erro ao registrar. Tente novamente.';
@@ -123,6 +131,45 @@ const Register = () => {
     }
   };
   
+  // Se o registro foi concluído, mostramos apenas o alerta de sucesso e o botão para login
+  if (registrationComplete) {
+    return (
+      <div className="flex min-h-screen flex-col justify-center bg-gradient-to-b from-blue-50 to-gray-100 px-4 py-8">
+        <div className="mx-auto w-full max-w-md">
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/icon.png" 
+              alt="Logo" 
+              className="h-40 w-auto" 
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/favicon.ico';
+              }}
+            />
+          </div>
+          
+          <div className="bg-white px-6 py-8 shadow-xl rounded-xl">
+            <Alert 
+              type="success"
+              title="Cadastro Realizado com Sucesso!"
+              message="Seu cadastro foi realizado com sucesso. Clique no botão abaixo para ir para a página de login e acessar sua conta."
+              className="mb-6"
+            />
+            
+            <Button
+              onClick={() => navigate('/login')}
+              variant="primary"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors"
+            >
+              Ir para Login
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // Interface de registro normal (se o registro ainda não foi concluído)
   return (
     <div className="flex min-h-screen flex-col justify-center bg-gradient-to-b from-blue-50 to-gray-100 px-4 py-8">
       <div className="mx-auto w-full max-w-md">
@@ -150,16 +197,6 @@ const Register = () => {
 
       <div className="mt-6 mx-auto w-full max-w-md">
         <div className="bg-white px-6 py-8 shadow-xl rounded-xl">
-          {/* Alerta de sucesso */}
-          {showSuccessAlert && (
-            <Alert
-              type="success"
-              title="Cadastro Realizado!"
-              message="Seu cadastro foi realizado com sucesso. Você será redirecionado para a página de login."
-              className="mb-6"
-            />
-          )}
-          
           {/* Alerta de erro */}
           {serverError && (
             <Alert
