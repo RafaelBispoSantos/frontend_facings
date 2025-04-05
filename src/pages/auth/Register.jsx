@@ -72,38 +72,47 @@ const Register = () => {
     setServerError('');
     
     try {
-      const result = await register({
+      await register({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
       
-      console.log('Registro concluído:', result);
+      // Reseta o estado do formulário
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
       
-      // Redirecionar para login após registro bem-sucedido
-      navigate('/login', { state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' } });
+      // Reseta o estado de submissão antes de navegar
+      setIsSubmitting(false);
+      
+      // Navega para a página de login
+      navigate('/login', { 
+        state: { message: 'Cadastro realizado com sucesso! Faça login para continuar.' },
+        replace: true // Isso previne voltar para a página de registro
+      });
+      
     } catch (err) {
       console.error('Erro no registro:', err);
       
-      // Tratamento de erro mais robusto
       let errorMessage = 'Erro ao registrar. Tente novamente.';
       
       if (err.response) {
-        // Resposta do servidor com código de erro
         errorMessage = err.response.data?.message || `Erro ${err.response.status}: ${err.response.statusText}`;
       } else if (err.request) {
-        // Requisição feita mas sem resposta
         errorMessage = 'Servidor não respondeu. Verifique sua conexão.';
       } else if (err.message) {
-        // Erro específico
         errorMessage = err.message;
       }
       
       setServerError(errorMessage);
-    } finally {
+      // Certifique-se de resetar o estado de submissão em caso de erro
       setIsSubmitting(false);
     }
-  };
+};
   
   return (
     <div className="flex min-h-screen flex-col justify-center bg-gradient-to-b from-blue-50 to-gray-100 px-4 py-8">
