@@ -7,6 +7,7 @@ import { useStoreTypes } from '../../components/hooks/useStoreTypes';
 import { formatCategoryName, formatStoreType, formatPercentage } from '../utils/formatters';
 import { Button } from '../../components/ui';
 import { Link } from 'react-router-dom';
+import api from '@/services/api';
 
 const Dashboard = () => {
   const { spaces, isLoading } = useFacings();
@@ -23,28 +24,24 @@ const Dashboard = () => {
   
   // Carregar metas para cada espaço
   useEffect(() => {
-    const fetchGoalResults = async () => {
-      const results = {};
-      
-      for (const space of spaces) {
-        try {
-          const response = await fetch(`/api/spaces/${space._id}/check-goal`, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            results[space._id] = data;
-          }
-        } catch (error) {
-          console.error(`Erro ao verificar meta para espaço ${space._id}:`, error);
-        }
+   const fetchGoalResults = async () => {
+  try {
+    const results = {};
+    
+    for (const space of spaces) {
+      try {
+        const response = await api.get(`/spaces/${space._id}/check-goal`);
+        results[space._id] = response.data;
+      } catch (error) {
+        console.error(`Erro ao verificar meta para espaço ${space._id}:`, error);
       }
-      
-      setGoalResults(results);
-    };
+    }
+    
+    setGoalResults(results);
+  } catch (error) {
+    console.error('Erro ao buscar metas:', error);
+  }
+};
     
     if (spaces.length > 0) {
       fetchGoalResults();
