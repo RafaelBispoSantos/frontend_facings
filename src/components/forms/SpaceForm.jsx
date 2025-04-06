@@ -93,7 +93,7 @@ const SpaceForm = ({ onSubmit, initialData = null, isSubmitting = false }) => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Ex: Prateleira de Desodorantes - Loja Centro"
+            placeholder="Ex: Categoria Deos - Loja Assai Pirelli"
             error={errors.name}
             className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
